@@ -1,20 +1,49 @@
-import { useState, useEffectffect } from 'react'
+import { useState, useEffect } from 'react'
 
 function Game() {
-  const [count, setCount] = useState(0)
+  const [username, setUsername] = useState("")
+  const [balance, setBalance] = useState(0)
+
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("username")
+    const savedBalance = localStorage.getItem("balance")  
+    if (savedUsername) {
+      setUsername(savedUsername)
+    }
+    if (savedBalance) {
+      setBalance(Number(savedBalance))
+    }
+  }
+  , [])
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value)
+    localStorage.setItem("username", event.target.value)
+  }
+
+  const earnMoney = () => {
+    const amount = Math.floor(Math.random() * 100) + 1;
+    const newBalance = balance + amount
+    setBalance(newBalance)
+    localStorage.setItem("balance", newBalance)
+    alert(`You earned $${amount}!`)
+  }
 
   return (
     <>
-      
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      <h2>Hello {username || ""}</h2>
+      <input 
+        type="text"
+        placeholder='Enter your name'
+        value={username}
+        onChange={handleUsernameChange}
+      />
+      <h2>Wallet Balance: ${balance}</h2>
+      <div>
+        <button onClick={earnMoney}>
+          Earn Money
         </button>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
