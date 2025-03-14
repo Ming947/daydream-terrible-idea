@@ -1,33 +1,44 @@
 import { useState, useEffect } from 'react'
 
 function Game() {
-  const [username, setUsername] = useState("")
-  const [balance, setBalance] = useState(0)
+  const [username, setUsername] = useState("");
+  const [balance, setBalance] = useState(0);
+  const [lastEarnings, setLastEarnings] = useState(0);
+  const [earningHistory, setEarningHistory] = useState([]);
 
   useEffect(() => {
-    const savedUsername = localStorage.getItem("username")
-    const savedBalance = localStorage.getItem("balance")  
+    const savedUsername = localStorage.getItem("username");
+    const savedBalance = localStorage.getItem("balance");
+    const savedHistory = localStorage.getItem("earningHistory");
+
     if (savedUsername) {
       setUsername(savedUsername)
     }
     if (savedBalance) {
       setBalance(Number(savedBalance))
     }
+    if (savedHistory) {
+      setEarningHistory(JSON.parse(savedHistory))
+    }
   }
-  , [])
+  , []);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value)
     localStorage.setItem("username", event.target.value)
-  }
+  };
 
   const earnMoney = () => {
     const amount = Math.floor(Math.random() * 100) + 1;
-    const newBalance = balance + amount
-    setBalance(newBalance)
-    localStorage.setItem("balance", newBalance)
-    alert(`You earned $${amount}!`)
-  }
+    const newBalance = balance + amount;
+    const newHistory = [amount, ...earningHistory];
+    setBalance(newBalance);
+    setLastEarnings(amount);
+    setEarningHistory(newHistory);
+
+    localStorage.setItem("balance", newBalance);
+    localStorage.setItem("earningHistory", JSON.stringify(newHistory))
+  };
 
   return (
     <>
@@ -43,9 +54,10 @@ function Game() {
         <button onClick={earnMoney}>
           Earn Money
         </button>
+        {lastEarnings > 0 && <span>+${lastEarnings}</span>}
       </div>
     </>
   )
 }
 
-export default Game
+export default Game;
