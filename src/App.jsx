@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 
 function Game() {
   const [username, setUsername] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
   const [balance, setBalance] = useState(0);
   const [lastEarnings, setLastEarnings] = useState(0);
   const [earningHistory, setEarningHistory] = useState([]);
@@ -25,7 +26,11 @@ function Game() {
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value)
-    localStorage.setItem("username", event.target.value)
+  };
+
+  const saveUsername = () => {
+    localStorage.setItem("username", username);
+    setIsEditing(false); 
   };
 
   const earnMoney = () => {
@@ -42,17 +47,35 @@ function Game() {
 
   return (
     <>
-      <h2>Hello {username || ""}</h2>
-      <input 
-        type="text"
-        placeholder='Enter your name'
-        value={username}
-        onChange={handleUsernameChange}
-      />
+      <h2>Hello {username || ""}
+        <span
+          aria-label="edit"
+          style={{ cursor: "pointer", fontSize: "18px", marginLeft: "5px" }}
+          onClick={() => setIsEditing(true)}>
+          ✏️
+        </span>
+      </h2>
+      
+      {isEditing && (
+        <div>
+          <input
+            type="text"
+            value={username}
+            onChange={handleUsernameChange}
+            placeholder="Enter your name"
+          />
+          <button 
+            style={{ marginLeft: "5px", cursor: "pointer", fontSize: "14px", all:"unset" }}
+            onClick={saveUsername}>
+            ✅
+          </button>
+        </div>
+      )}
+
       <h2>Wallet Balance: ${balance}</h2>
       <div>
         <button onClick={earnMoney}>
-          Earn Money
+          GET Money
         </button>
         {lastEarnings > 0 && <span>+${lastEarnings}</span>}
       </div>
