@@ -2,6 +2,19 @@ import { useState, useEffect } from 'react'
 import './App.css';
 import backgroundPic from "./assets/forest.jpg";
 
+const randomEvents = [
+  { message: "💰 You found a wallet!", multiplier: 1.2 },
+  { message: "🎁 You opened a mysterious treasure chest!", multiplier: 2 },
+  { message: "🍀 The goddess of luck is smiling at you!", multiplier: 1.5 },
+  { message: "🏆 You won a prize in a competition!", multiplier: 1.8 },
+  { message: "💎 You found a diamond!", multiplier: 2.5 },
+  { message: "🎰 You hit the jackpot in a slot machine!", multiplier: 3 },
+  { message: "🚀 Your stock investments skyrocketed!", multiplier: 2 },
+  { message: "📦 You received a mysterious gift!", multiplier: 1.3 },
+  { message: "🤑 You won a small lottery!", multiplier: 1.4 },
+  { message: "🪙 You found a coin on the ground!", multiplier: 1.1 }
+];
+
 function Game() {
   const [username, setUsername] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -10,6 +23,8 @@ function Game() {
   const [showEarnings, setShowEarnings] = useState(false);
   const [earningHistory, setEarningHistory] = useState([]);
   const [moneyDrops, setMoneyDrops] = useState([]);
+  const [modalMessage, setModalMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const savedUsername = localStorage.getItem("username");
@@ -66,6 +81,23 @@ function Game() {
     setLastEarnings(amount);
     setEarningHistory(newHistory);
 
+    if (Math.random() < 0.2) {
+      const randomEvent = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+      const eventMessage = randomEvent.message;
+      const multiplier = randomEvent.multiplier;
+
+      const bonusAmount = Math.floor(amount * (multiplier - 1));
+      setBalance(newBalance + bonusAmount);
+      setLastEarnings(bonusAmount);
+
+      setModalMessage(eventMessage);
+      setShowModal(true);
+
+      setTimeout(() => {
+        setShowModal(false);
+      }, 1700);
+    }
+
     const moneyCount = Math.floor(Math.random() * 6) + 5;
     const newMoneyDrops = Array.from({ length: moneyCount }, (_, index) => ({
       id: index,
@@ -119,6 +151,11 @@ function Game() {
           GET Money
         </button>
 
+        {earningHistory.length > 0 && earningHistory[0].eventMessage && (
+          <p className="event-message">{earningHistory[0].eventMessage}</p>
+        )}
+
+
         {lastEarnings !== null && (
           <span  className={`earnings-text`}>
             +${lastEarnings}
@@ -138,6 +175,14 @@ function Game() {
           </span>
         ))}
       </div>
+
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>{modalMessage}</p>
+          </div>
+        </div>
+      )}
     </>
   )
 }
