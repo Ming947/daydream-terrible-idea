@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
+import './App.css';
 
 function Game() {
   const [username, setUsername] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [balance, setBalance] = useState(0);
   const [lastEarnings, setLastEarnings] = useState(0);
+  const [showEarnings, setShowEarnings] = useState(false);
   const [earningHistory, setEarningHistory] = useState([]);
+  const [moneyDrops, setMoneyDrops] = useState([]);
 
   useEffect(() => {
     const savedUsername = localStorage.getItem("username");
@@ -24,6 +27,19 @@ function Game() {
   }
   , []);
 
+  useEffect(() => {
+    if (lastEarnings !== null) {
+      setShowEarnings(true);
+      const timer = setTimeout(() => {
+        setShowEarnings(false); 
+        setTimeout(() => setLastEarnings(null), 500); 
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }
+  , [lastEarnings]);
+
   const handleUsernameChange = (event) => {
     setUsername(event.target.value)
   };
@@ -37,9 +53,18 @@ function Game() {
     const amount = Math.floor(Math.random() * 100) + 1;
     const newBalance = balance + amount;
     const newHistory = [amount, ...earningHistory];
+
     setBalance(newBalance);
     setLastEarnings(amount);
     setEarningHistory(newHistory);
+
+    const moneyCount = Math.floor(Math.random() * 10) + 1;
+    const newMoneyDrops = Array.from({ length: moneyCount }, (_, index) => ({
+      id: index,
+      x: Math.random()* 200 + 100,
+      duration: Math.floor(Math.random() * 1.5) + 1
+    }));
+    setMoneyDrops(newMoneyDrops);
 
     localStorage.setItem("balance", newBalance);
     localStorage.setItem("earningHistory", JSON.stringify(newHistory))
@@ -73,11 +98,28 @@ function Game() {
       )}
 
       <h2>Wallet Balance: ${balance}</h2>
-      <div>
-        <button onClick={earnMoney}>
+      <div className='earnings-container'>
+        <button className='earn-btn' onClick={earnMoney}>
           GET Money
         </button>
-        {lastEarnings > 0 && <span>+${lastEarnings}</span>}
+
+        {lastEarnings !== null && (
+          <span  className={`earnings-text ${showEarnings ? "fade-in" : "fade-out"}`}>
+            +${lastEarnings}
+          </span>
+        )}
+
+        {moneyDrops.map((money) => (
+          <span 
+            key={money.id} 
+            className="money"
+            style={{
+              left: `calc(50% + ${money.x}px)`,
+              animation: `money-fall ${money.duration}s ease-in-out forwards`
+            }}>
+            💸
+          </span>
+        ))}
       </div>
     </>
   )
