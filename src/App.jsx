@@ -40,6 +40,13 @@ function Game() {
   }
   , [lastEarnings]);
 
+  useEffect(() => {
+    if (moneyDrops.length > 0) {
+      const timer = setTimeout(() => setMoneyDrops([]), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [moneyDrops]);  
+
   const handleUsernameChange = (event) => {
     setUsername(event.target.value)
   };
@@ -58,13 +65,15 @@ function Game() {
     setLastEarnings(amount);
     setEarningHistory(newHistory);
 
-    const moneyCount = Math.floor(Math.random() * 10) + 1;
+    const moneyCount = Math.floor(Math.random() * 6) + 5;
     const newMoneyDrops = Array.from({ length: moneyCount }, (_, index) => ({
       id: index,
-      x: Math.random()* 200 + 100,
-      duration: Math.floor(Math.random() * 1.5) + 1
+      x: Math.random()* 300 - 50,
+      y: Math.random() * 300 - 100,
+      duration: (Math.random() * 1.5 + 1).toFixed(2)
     }));
-    setMoneyDrops(newMoneyDrops);
+
+    setMoneyDrops([...newMoneyDrops]);
 
     localStorage.setItem("balance", newBalance);
     localStorage.setItem("earningHistory", JSON.stringify(newHistory))
@@ -115,7 +124,8 @@ function Game() {
             className="money"
             style={{
               left: `calc(50% + ${money.x}px)`,
-              animation: `money-fall ${money.duration}s ease-in-out forwards`
+              "--fall-distance": `${money.y}px`,
+              "--duration": `${money.duration}s`            
             }}>
             💸
           </span>
