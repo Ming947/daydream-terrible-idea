@@ -166,7 +166,7 @@ button:hover {
 
   .modal{
     top: 30vh;
-    left: 50%;
+    left: 30vw;
     transform: translateX(-50%);
     align-items: flex-start;
   }
