@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css';
 import backgroundPic from "./assets/forest.jpg";
+import coinSound from "./assets/coin-recieved.mp3";
 
 const randomEvents = [
   { message: "💰 You found a wallet!", multiplier: 1.2 },
@@ -25,6 +26,7 @@ function Game() {
   const [moneyDrops, setMoneyDrops] = useState([]);
   const [modalMessage, setModalMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const coinAudio = new Audio(coinSound);
 
   useEffect(() => {
     const savedUsername = localStorage.getItem("username");
@@ -76,6 +78,7 @@ function Game() {
     const amount = Math.floor(Math.random() * 100) + 1;
     const newBalance = balance + amount;
     const newHistory = [amount, ...earningHistory];
+    coinAudio.play();
 
     setBalance(newBalance);
     setLastEarnings(amount);
