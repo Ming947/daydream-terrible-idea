@@ -1,6 +1,20 @@
 import { useState, useEffect } from 'react'
 import './App.css';
-import backgroundPic from "./assets/forest.jpg";
+import backgroundPic from "./assets/background.png";
+import coinSound from "./assets/coin-recieved.mp3";
+
+const randomEvents = [
+  { message: "💰 You found a wallet!", multiplier: 1.2 },
+  { message: "🎁 You opened a mysterious treasure chest!", multiplier: 2 },
+  { message: "🍀 The goddess of luck is smiling at you!", multiplier: 1.5 },
+  { message: "🏆 You won a prize in a competition!", multiplier: 1.8 },
+  { message: "💎 You found a diamond!", multiplier: 2.5 },
+  { message: "🎰 You hit the jackpot in a slot machine!", multiplier: 3 },
+  { message: "🚀 Your stock investments skyrocketed!", multiplier: 2 },
+  { message: "📦 You received a mysterious gift!", multiplier: 1.3 },
+  { message: "🤑 You won a small lottery!", multiplier: 1.4 },
+  { message: "🪙 You found a coin on the ground!", multiplier: 1.1 }
+];
 
 function Game() {
   const [username, setUsername] = useState("");
@@ -10,6 +24,9 @@ function Game() {
   const [showEarnings, setShowEarnings] = useState(false);
   const [earningHistory, setEarningHistory] = useState([]);
   const [moneyDrops, setMoneyDrops] = useState([]);
+  const [modalMessage, setModalMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const coinAudio = new Audio(coinSound);
 
   useEffect(() => {
     const savedUsername = localStorage.getItem("username");
@@ -61,10 +78,28 @@ function Game() {
     const amount = Math.floor(Math.random() * 100) + 1;
     const newBalance = balance + amount;
     const newHistory = [amount, ...earningHistory];
+    coinAudio.play();
 
     setBalance(newBalance);
     setLastEarnings(amount);
     setEarningHistory(newHistory);
+
+    if (Math.random() < 0.2) {
+      const randomEvent = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+      const eventMessage = randomEvent.message;
+      const multiplier = randomEvent.multiplier;
+
+      const bonusAmount = Math.floor(amount * (multiplier - 1));
+      setBalance(newBalance + bonusAmount);
+      setLastEarnings(bonusAmount);
+
+      setModalMessage(eventMessage);
+      setShowModal(true);
+
+      setTimeout(() => {
+        setShowModal(false);
+      }, 1700);
+    }
 
     const moneyCount = Math.floor(Math.random() * 6) + 5;
     const newMoneyDrops = Array.from({ length: moneyCount }, (_, index) => ({
@@ -98,11 +133,12 @@ function Game() {
             value={username}
             onChange={handleUsernameChange}
             placeholder="Enter your name"
+            style={{borderRadius: "5px", backgroundColor:"rgba(0,0,0,0)", borderColor: "rgb(85, 190, 62)", color:"white", fontWeight:"bold", width:"15%", paddingLeft: "5px", fontSize: "14px"}}
           />
           <button 
-            style={{ marginLeft: "5px", cursor: "pointer", fontSize: "14px", all:"unset" }}
+            style={{ marginLeft: "5px", cursor: "pointer", fontSize: "14px", fontWeight:"bolder", paddingLeft:"10px", backgroundColor: "rgba(0,0,0,0)" }}
             onClick={saveUsername}>
-            ✅
+            √
           </button>
         </div>
       )}
@@ -110,7 +146,6 @@ function Game() {
       <img src={backgroundPic}
         alt="forest"
         className='background-image'
-        style={{ width: "100%", height: "auto", marginTop: "20px" }}
       />
 
       <h2>Wallet Balance: ${balance}</h2>
@@ -118,6 +153,10 @@ function Game() {
         <button className='earn-btn' onClick={earnMoney}>
           GET Money
         </button>
+
+        {earningHistory.length > 0 && earningHistory[0].eventMessage && (
+          <p className="event-message">{earningHistory[0].eventMessage}</p>
+        )}
 
         {lastEarnings !== null && (
           <span  className={`earnings-text`}>
@@ -138,6 +177,14 @@ function Game() {
           </span>
         ))}
       </div>
+
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>{modalMessage}</p>
+          </div>
+        </div>
+      )}
     </>
   )
 }
