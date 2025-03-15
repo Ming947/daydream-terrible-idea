@@ -98,7 +98,7 @@ function Game() {
 
       setTimeout(() => {
         setShowModal(false);
-      }, 1700);
+      }, 1500);
     }
 
     const moneyCount = Math.floor(Math.random() * 6) + 5;
@@ -133,10 +133,10 @@ function Game() {
             value={username}
             onChange={handleUsernameChange}
             placeholder="Enter your name"
-            style={{borderRadius: "5px", backgroundColor:"rgba(0,0,0,0)", borderColor: "rgb(85, 190, 62)", color:"white", fontWeight:"bold", width:"15%", paddingLeft: "5px", fontSize: "14px"}}
+            className='username-input'
           />
           <button 
-            style={{ marginLeft: "5px", cursor: "pointer", fontSize: "14px", fontWeight:"bolder", paddingLeft:"10px", backgroundColor: "rgba(0,0,0,0)" }}
+            className='save-btn'
             onClick={saveUsername}>
             √
           </button>
