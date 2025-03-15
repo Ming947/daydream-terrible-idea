@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css';
+import backgroundPic from "./assets/forest.jpg";
 
 function Game() {
   const [username, setUsername] = useState("");
@@ -105,6 +106,11 @@ function Game() {
           </button>
         </div>
       )}
+
+      <img src={backgroundPic}
+        alt="forest"
+        style={{ width: "100%", height: "auto", marginTop: "20px" }}
+      />
 
       <h2>Wallet Balance: ${balance}</h2>
       <div className='earnings-container'>
