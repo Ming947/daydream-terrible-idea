@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css';
+import backgroundPic from "./assets/forest.jpg";
 
 function Game() {
   const [username, setUsername] = useState("");
@@ -68,8 +69,8 @@ function Game() {
     const moneyCount = Math.floor(Math.random() * 6) + 5;
     const newMoneyDrops = Array.from({ length: moneyCount }, (_, index) => ({
       id: index,
-      x: Math.random()* 300 - 50,
-      y: Math.random() * 300 - 100,
+      x: Math.random()* 300 + 50,
+      y: Math.random() * 100 + 50,
       duration: (Math.random() * 1.5 + 1).toFixed(2)
     }));
 
@@ -106,6 +107,12 @@ function Game() {
         </div>
       )}
 
+      <img src={backgroundPic}
+        alt="forest"
+        className='background-image'
+        style={{ width: "100%", height: "auto", marginTop: "20px" }}
+      />
+
       <h2>Wallet Balance: ${balance}</h2>
       <div className='earnings-container'>
         <button className='earn-btn' onClick={earnMoney}>
@@ -113,7 +120,7 @@ function Game() {
         </button>
 
         {lastEarnings !== null && (
-          <span  className={`earnings-text ${showEarnings ? "fade-in" : "fade-out"}`}>
+          <span  className={`earnings-text`}>
             +${lastEarnings}
           </span>
         )}
