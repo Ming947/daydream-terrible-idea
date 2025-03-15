@@ -133,11 +133,12 @@ function Game() {
             value={username}
             onChange={handleUsernameChange}
             placeholder="Enter your name"
+            style={{borderRadius: "5px", backgroundColor:"rgba(0,0,0,0)", borderColor: "rgb(85, 190, 62)", color:"white", fontWeight:"bold", width:"15%", paddingLeft: "5px", fontSize: "14px"}}
           />
           <button 
-            style={{ marginLeft: "5px", cursor: "pointer", fontSize: "14px", all:"unset" }}
+            style={{ marginLeft: "5px", cursor: "pointer", fontSize: "14px", fontWeight:"bolder", paddingLeft:"10px", backgroundColor: "rgba(0,0,0,0)" }}
             onClick={saveUsername}>
-            ✅
+            √
           </button>
         </div>
       )}
