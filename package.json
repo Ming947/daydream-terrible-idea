@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://Ming947.github.io/daydream-terrible-idea",
+  "homepage": "https://ming947.github.io/daydream-terrible-idea",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
