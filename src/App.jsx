@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css';
-import backgroundPic from "./assets/forest.jpg";
+import backgroundPic from "./assets/background.png";
 import coinSound from "./assets/coin-recieved.mp3";
 
 const randomEvents = [
@@ -145,7 +145,6 @@ function Game() {
       <img src={backgroundPic}
         alt="forest"
         className='background-image'
-        style={{ width: "100%", height: "auto", marginTop: "20px" }}
       />
 
       <h2>Wallet Balance: ${balance}</h2>
@@ -157,7 +156,6 @@ function Game() {
         {earningHistory.length > 0 && earningHistory[0].eventMessage && (
           <p className="event-message">{earningHistory[0].eventMessage}</p>
         )}
-
 
         {lastEarnings !== null && (
           <span  className={`earnings-text`}>
